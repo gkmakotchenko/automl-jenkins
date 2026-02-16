@@ -15,7 +15,7 @@ pipeline {
           python3 -m venv .venv
           . .venv/bin/activate
           pip install -U pip
-          pip install -r lab3/requirements.txt
+          pip install -r ./requirements.txt
         '''
       }
     }
@@ -24,7 +24,6 @@ pipeline {
       steps {
         sh '''
           . .venv/bin/activate
-          cd lab3
           ruff check .
         '''
       }
@@ -34,7 +33,6 @@ pipeline {
       steps {
         sh '''
           . .venv/bin/activate
-          cd lab3
           black --check .
         '''
       }
