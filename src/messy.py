@@ -1,29 +1,29 @@
-import os,sys, json
-from datetime import datetime
-from math import *  # noqa: F403
+import sys
+from dataclasses import dataclass
 
-def Calc(x,y):  # плохое имя, нет аннотаций, стиль
-  z=x+y
-  return  z
 
-class data:
-    def __init__(self,ID,Name):
-        self.ID=ID
-        self.Name=Name
+def calc(x: int, y: int) -> int:
+    return x + y
 
-def doStuff( a, b ,c=None ):
-    if a==None:
-        print("a is none")  # print в библиотечном коде
-    if b:
-        pass
-    unused = 123
-    return Calc(a,b)
 
-def main():
-    d=data(1,"test")
-    print( doStuff(1,2) )
-    if True: print("inline")  # noqa: E701
+@dataclass
+class Data:
+    id: int
+    name: str
+
+
+def do_stuff(a: int | None, b: int, c: int | None = None) -> int:
+    _ = c
+    if a is None:
+        a = 0
+    return calc(a, b)
+
+
+def main() -> int:
+    data_obj = Data(1, "test")
+    print(do_stuff(data_obj.id, 2))
     return 0
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     sys.exit(main())
