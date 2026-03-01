@@ -1,0 +1,23 @@
+pipeline {
+  agent any
+
+  options {
+    timestamps()
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('Lab2 test: always fail') {
+      steps {
+        echo "This is lab2 test pipeline. It will fail intentionally."
+        sh 'exit 1'
+      }
+    }
+  }
+
+  post {
+    always {
+      echo "Build finished: ${currentBuild.currentResult}"
+    }
+  }
+}
