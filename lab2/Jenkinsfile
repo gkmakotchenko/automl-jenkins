@@ -1,23 +1,31 @@
 pipeline {
   agent any
 
-  options {
-    timestamps()
-    disableConcurrentBuilds()
-  }
+  options { timestamps() }
 
   stages {
+    stage('Notify: pending') {
+      steps {
+        githubNotify context: 'ci/jenkins-lab2', status: 'PENDING', description: 'Lab2 started'
+      }
+    }
+
     stage('Lab2 test: always fail') {
       steps {
-        echo "This is lab2 test pipeline. It will fail intentionally."
         sh 'exit 1'
       }
     }
   }
 
   post {
-    always {
-      echo "Build finished: ${currentBuild.currentResult}"
+    success {
+      githubNotify context: 'ci/jenkins-lab2', status: 'SUCCESS', description: 'Lab2 passed'
+    }
+    failure {
+      githubNotify context: 'ci/jenkins-lab2', status: 'FAILURE', description: 'Lab2 failed'
+    }
+    aborted {
+      githubNotify context: 'ci/jenkins-lab2', status: 'ERROR', description: 'Lab2 aborted'
     }
   }
 }
