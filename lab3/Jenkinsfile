@@ -17,52 +17,51 @@ pipeline {
       }
     }
 
-    stage('Setup venv') {
+    stage('Setup venv (lab3)') {
       steps {
-        sh '''
-          set -eux
-          python3 -V
-          python3 -m venv .venv
-          . .venv/bin/activate
-          pip install -U pip
-          pip install -r requirements.txt
-        '''
+        dir('lab3') {
+          sh '''
+            set -eux
+            python3 -V
+            python3 -m venv .venv
+            . .venv/bin/activate
+            python -m pip install -U pip
+            python -m pip install -r requirements.txt
+          '''
+        }
       }
     }
 
-    stage('Checks (ruff + black)') {
+    stage('Checks (ruff + black) (lab3)') {
       steps {
-        script {
-          int ruffCode = sh(
-            script: '''
+        dir('lab3') {
+          script {
+            // Ruff
+            sh '''
               set +e
               . .venv/bin/activate
               ruff check .
               echo $? > .ruff_exit
               exit 0
-            ''',
-            returnStatus: true
-          )
-
-          int blackCode = sh(
-            script: '''
+            '''
+            // Black
+            sh '''
               set +e
               . .venv/bin/activate
               black --check .
               echo $? > .black_exit
               exit 0
-            ''',
-            returnStatus: true
-          )
+            '''
 
-          def ruffExit = sh(script: "cat .ruff_exit", returnStdout: true).trim()
-          def blackExit = sh(script: "cat .black_exit", returnStdout: true).trim()
+            def ruffExit  = sh(script: "cat .ruff_exit",  returnStdout: true).trim()
+            def blackExit = sh(script: "cat .black_exit", returnStdout: true).trim()
 
-          echo "ruff exit code: ${ruffExit}"
-          echo "black exit code: ${blackExit}"
+            echo "ruff exit code: ${ruffExit}"
+            echo "black exit code: ${blackExit}"
 
-          if (ruffExit != "0" || blackExit != "0") {
-            currentBuild.result = 'FAILURE'
+            if (ruffExit != "0" || blackExit != "0") {
+              currentBuild.result = 'FAILURE'
+            }
           }
         }
       }
