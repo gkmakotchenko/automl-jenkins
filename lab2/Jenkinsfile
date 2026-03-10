@@ -22,7 +22,7 @@ pipeline {
       githubNotify context: 'ci/jenkins-lab2', status: 'SUCCESS', description: 'Lab2 passed'
     }
     failure {
-      githubNotify context: 'ci/jenkins-lab2', status: 'FAILURE', description: 'Lab2 failed'
+      githubNotify context: 'ci/jenkins-lab2', status: 'FAILURE', description: 'Lab2 faile'
     }
     aborted {
       githubNotify context: 'ci/jenkins-lab2', status: 'ERROR', description: 'Lab2 aborted'
